@@ -1,10 +1,35 @@
 ---
+# Run ansible-playbook testible-playbook.yml --extra-vars='{"vm": "vm", "snapshot": "snapshot", "playbook": "playbook name"}'
+# vm        : is the name of your vm in inventory
+# snapshot  : is the name of the snapshot to use
+# playbook  : is the name of the playbook to include for test
+
 - name: A Playbook to test yours
   hosts: localhost
 
   tasks:
   - include_vars:
-      file: "host_vars/{{ test_host }}"
+      # include vars of your vm
+      file: "host_vars/{{ vm }}"
       name: testible
-  - name: "Display vars of testible"
+  - name: "This tasks will setup your .ssh/config with vm info"
     shell: "echo {{ testible.host.name }}"
+  - name: "This task will restore the vm to snapshot"
+    shell: "echo {{ testible.host.vbox.snapshot.uuid }}"
+  - name: "This task will start the vm"
+    shell: "echo {{ testible.host.vbox.uuid }}"
+  - name: "This task will wait for ssh"
+    shell: "echo {{ testible.host.vbox.uuid }}"
+
+# include the playbook to test
+- name: "Include the playbook to test"
+  hosts: {{ vm }}
+  include: {{ playbook }}
+
+- name: Tasks to shutdown the vm
+  hosts: localhost
+  tasks:
+  - name: "Stop the vm"
+    shell: "echo stop the vm"
+  - name: "Remove .ssh/config entry"
+    shell: "echo remove .ssh/entry"
