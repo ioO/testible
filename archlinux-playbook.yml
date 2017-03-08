@@ -1,0 +1,10 @@
+---
+- name: A Playbook to test yours
+  hosts: localhost
+
+  tasks:
+  - include_vars:
+      file: "host_vars/{{ test_host }}"
+      name: testible
+  - name: "Display vars of testible"
+    shell: "echo {{ testible.host.name }}"
