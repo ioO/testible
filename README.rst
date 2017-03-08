@@ -11,7 +11,7 @@ Quick start
 2. Set variables host vars for localhost and virtualbox vm host
 3. Run this command
 
-.. code: shell
+.. code:: shell
    ansible-playbook testible-playbook.yml  --extra-vars='{"vm": "name of vm", "snapshot": "name of snapshot", "playbook": "name of playbook"}'
 
 Test playbook use **localhost** host. It sets the vm at the snapshot and launch the vm.
@@ -28,7 +28,7 @@ Based on `ansible best practices <http://docs.ansible.com/ansible/playbooks_best
 So variables needed for localhost are located on *host_vars/localhost*. The file is commented. The testible playbook can sit along your project playbook.
 
 The script need your local user in var to configure *$HOME/.ssh/config* file. The playbook add an entry for the test vm at the start and delete the entry when it quits.
-.. code: yaml
+.. code:: yaml
    ---
    host:
      user:
@@ -41,22 +41,22 @@ For each vm choose a name. Add it to your inventory file and define variables in
 
 To get your vm uuid, run :
 
-.. code: shell
+.. code:: shell
    $ VBoxManage list vms
 
 In your host var file add this var
-.. code: yaml
+.. code:: yaml
    ---
    host:
      vbox:
        uuid: vmuuid
 
 To get your vm snapshots, run :
-.. code: shell
+.. code:: shell
    $ VBoxManage snapshot vmuuid list
 
 In your host var file add this var
-.. code: yaml
+.. code:: yaml
    ---
    host:
      name: your name
@@ -66,5 +66,4 @@ In your host var file add this var
          bare_minimal: snapshotuuid
 
 Take a look at host_vars files ;)
-
 
