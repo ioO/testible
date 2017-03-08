@@ -32,8 +32,13 @@ testible playbook can sit along your project playbook.
 
 The script need your local user in var to configure *$HOME/.ssh/config*
 file. The playbook add an entry for the test vm at the start and delete
-the entry when it quits. .. code:: yaml --- host: user: local: name of
-your user
+the entry when it quits.
+```yaml
+---
+host:
+    user:
+      local: name of your local user
+```
 
 Configure vm
 ------------
@@ -48,7 +53,7 @@ $ VBoxManage list vms
 
 In your host var file add this var
 ```yaml 
---- 
+--- host: vbox: uuid: vmuuid
 host: 
     vbox: 
         uuid: vmuuid
