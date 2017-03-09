@@ -35,8 +35,14 @@
   # Start the vm
   - name: Start the vm
     command: "VBoxManage startvm {{ testible.host.vbox.uuid }}"
-  - name: "This task will wait for ssh"
-    shell: "echo wait for ssh"
+
+  # Wait for ssh service is started so we can test the playbook
+  - name: Wait for ssh in vm
+    wait_for:
+      host: "{{ testible.host.ip.lan }}"
+      port: 22
+      state: present
+      delay: 5
 
 # include the playbook to test
 #- name: "Include the playbook to test"
