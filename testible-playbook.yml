@@ -29,13 +29,12 @@
           StrictHostKeyChecking no
 
   # Restore know vm state
-  - name: "Set vm to snapshot state"
+  - name: Set vm to snapshot state
     command: "VBoxManage snapshot {{ testible.host.vbox.uuid }} restore {{ testible.host.vbox.snapshots[snapshot] }}"
 
-  - name: "This task will restore the vm to snapshot"
-    shell: "echo restore vm"
-  - name: "This task will start the vm"
-    shell: "echo start vm"
+  # Start the vm
+  - name: Start the vm
+    command: "VBoxManage startvm {{ testible.host.vbox.uuid }}"
   - name: "This task will wait for ssh"
     shell: "echo wait for ssh"
 
