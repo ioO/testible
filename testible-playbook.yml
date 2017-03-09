@@ -11,7 +11,7 @@
       # include vars of your vm
       file: "host_vars/{{ vm }}"
       name: testible
-  - name: "Create entry in local .ssh/config"
+  - name: Create entry in local .ssh/config
     blockinfile:
       dest: "/home/{{ host.user.local }}/.ssh/config"
       # Add unique marker for each host because ansible will rewrite block with same marker
@@ -45,9 +45,8 @@
       delay: 5
 
 # include the playbook to test
-#- name: "Include the playbook to test"
-  #hosts: {{ vm }}
-  #include: {{ playbook }}
+- name: Include the playbook to test
+  include: "{{ playbook }}"
 
 - name: Tasks to shutdown the vm and clean localhost
   hosts: localhost
@@ -57,13 +56,13 @@
   - name: Shutdown the vm
     command: "VBoxManage controlvm {{ testible.host.vbox.uuid }} acpipowerbutton"
 
-  - name: "Remove entry in local .ssh/config"
+  - name: Remove entry in local .ssh/config
     blockinfile:
       dest: "/home/{{ host.user.local }}/.ssh/config"
       marker: "# {mark} ANSIBLE MANAGED BLOCK FOR {{ testible.host.alias.lan }}"
       state: absent
 
-  - name: "Remove host ip in .ssh/known_hosts"
+  - name: Remove host ip in .ssh/known_hosts
     lineinfile:
       dest: "/home/{{ host.user.local }}/.ssh/known_hosts"
       state: absent

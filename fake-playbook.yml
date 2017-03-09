@@ -1,0 +1,7 @@
+---
+- name: A fake playbook
+  hosts: localhost
+
+  tasks:
+    - name: A simple message
+      shell: "echo foobar"
