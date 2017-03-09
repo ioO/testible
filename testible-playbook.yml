@@ -12,24 +12,48 @@
       # include vars of your vm
       file: "host_vars/{{ vm }}"
       name: testible
-  - name: "This tasks will setup your .ssh/config with vm info"
-    shell: "echo {{ testible.host.name }}"
+  - name: "Create entry in local .ssh/config"
+    blockinfile:
+      dest: "/home/{{ host.user.local }}/.ssh/config"
+      # Add unique marker for each host because ansible will rewrite block with same marker
+      marker: "# {mark} ANSIBLE MANAGED BLOCK FOR {{ testible.host.alias.lan }}"
+      block: |
+        Host {{ testible.host.alias.lan }}
+          HostName {{ testible.host.ip.lan }}
+          User {{ testible.host.ssh.user }}
+          ChallengeResponseAuthentication no
+          PasswordAuthentication yes
+          Port 22
+          ServerAliveCountMax 3
+          ServerAliveInterval 30
+          TCPKeepAlive no
+          StrictHostKeyChecking no
+
   - name: "This task will restore the vm to snapshot"
-    shell: "echo {{ testible.host.vbox.snapshot.uuid }}"
+    shell: "echo restore vm"
   - name: "This task will start the vm"
-    shell: "echo {{ testible.host.vbox.uuid }}"
+    shell: "echo start vm"
   - name: "This task will wait for ssh"
-    shell: "echo {{ testible.host.vbox.uuid }}"
+    shell: "echo wait for ssh"
 
 # include the playbook to test
-- name: "Include the playbook to test"
-  hosts: {{ vm }}
-  include: {{ playbook }}
+#- name: "Include the playbook to test"
+  #hosts: {{ vm }}
+  #include: {{ playbook }}
 
 - name: Tasks to shutdown the vm
   hosts: localhost
   tasks:
   - name: "Stop the vm"
     shell: "echo stop the vm"
-  - name: "Remove .ssh/config entry"
-    shell: "echo remove .ssh/entry"
+  - name: "Remove entry in local .ssh/config"
+    blockinfile:
+      dest: "/home/{{ host.user.local }}/.ssh/config"
+      marker: "# {mark} ANSIBLE MANAGED BLOCK FOR {{ testible.host.alias.lan }}"
+      state: absent
+
+  - name: "Remove host ip in .ssh/known_hosts"
+    lineinfile:
+      dest: "/home/{{ host.user.local }}/.ssh/known_hosts"
+      state: absent
+      regexp: "^{{ testible.host.ip.lan }} .*"
