@@ -6,7 +6,6 @@
 
 - name: A Playbook to test yours
   hosts: localhost
-
   tasks:
   - include_vars:
       # include vars of your vm
@@ -28,6 +27,10 @@
           ServerAliveInterval 30
           TCPKeepAlive no
           StrictHostKeyChecking no
+
+  # Restore know vm state
+  - name: "Set vm to snapshot state"
+    command: "VBoxManage snapshot {{ testible.host.vbox.uuid }} restore {{ testible.host.vbox.snapshots[snapshot] }}"
 
   - name: "This task will restore the vm to snapshot"
     shell: "echo restore vm"
