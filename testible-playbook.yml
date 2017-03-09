@@ -45,9 +45,8 @@
       delay: 5
 
 # include the playbook to test
-#- name: "Include the playbook to test"
-  #hosts: {{ vm }}
-  #include: {{ playbook }}
+- name: "Include the playbook to test"
+  include: "{{ playbook }}"
 
 - name: Tasks to shutdown the vm and clean localhost
   hosts: localhost
