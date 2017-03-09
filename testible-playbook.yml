@@ -28,6 +28,7 @@
           ServerAliveInterval 30
           TCPKeepAlive no
           StrictHostKeyChecking no
+
   - name: "This task will restore the vm to snapshot"
     shell: "echo restore vm"
   - name: "This task will start the vm"
@@ -45,5 +46,8 @@
   tasks:
   - name: "Stop the vm"
     shell: "echo stop the vm"
-  - name: "Remove .ssh/config entry"
-    shell: "echo remove .ssh/entry"
+  - name: "Remove entry in local .ssh/config"
+    blockinfile:
+      dest: "/home/{{ host.user.local }}/.ssh/config"
+      marker: "# {mark} ANSIBLE MANAGED BLOCK FOR {{ testible.host.alias.lan }}"
+      state: absent
