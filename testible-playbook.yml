@@ -49,11 +49,14 @@
   #hosts: {{ vm }}
   #include: {{ playbook }}
 
-- name: Tasks to shutdown the vm
+- name: Tasks to shutdown the vm and clean localhost
   hosts: localhost
   tasks:
-  - name: "Stop the vm"
-    shell: "echo stop the vm"
+
+  # Shutdown the vm for tests use acpipowerbutton because poweroff loose files
+  - name: Shutdown the vm
+    command: "VBoxManage controlvm {{ testible.host.vbox.uuid }} acpipowerbutton"
+
   - name: "Remove entry in local .ssh/config"
     blockinfile:
       dest: "/home/{{ host.user.local }}/.ssh/config"
