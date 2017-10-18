@@ -1,2 +1,4 @@
 pip-review
 pip-tools
+sphinx
+sphinx-autobuild
