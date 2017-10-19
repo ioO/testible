@@ -1,2 +1,3 @@
 *.retry
 docs/build/
+ansible.cfg

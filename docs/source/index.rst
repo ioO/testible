@@ -1,7 +1,12 @@
 Testible
 ========
 
-An example how to test playbooks and roles with virtualbox vms
+Playbooks to start and stop virtualbox vms to test your playbook.
+
+When you write playbook you would like to test on virtual machine. More you learn ansible, more playbooks you write. You 
+use snapshots to keep your vm at the right state before your playbook. It is time consuming to start, stop and restore 
+your vms.
+Here comes **testible**, an easy and *ansible* way to start vm at state, test your playbook, stop and restore state.
 
 Quick start
 -----------
