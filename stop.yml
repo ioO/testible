@@ -1,0 +1,27 @@
+---
+# Run ansible-playbook stop.yml --extra-vars='{"vm": "vm"}'
+# vm        : is the name of your vm in inventory
+
+- name: Stop running virtualbox vm
+  hosts: localhost
+  tasks:
+  - include_vars:
+      # include vars of your vm
+      file: "{{ inventory_dir }}/host_vars/{{ vm }}"
+      name: testible
+
+  # Shutdown the vm for tests use acpipowerbutton because poweroff loose files
+  - name: Shutdown the vm
+    command: "VBoxManage controlvm {{ testible.host.vbox.uuid }} acpipowerbutton"
+
+  - name: Remove entry in local .ssh/config
+    blockinfile:
+      dest: "/home/{{ host.user.local }}/.ssh/config"
+      marker: "# {mark} ANSIBLE MANAGED BLOCK FOR {{ testible.host.alias.lan }}"
+      state: absent
+
+  - name: Remove host ip in .ssh/known_hosts
+    lineinfile:
+      dest: "/home/{{ host.user.local }}/.ssh/known_hosts"
+      state: absent
+      regexp: "^{{ testible.host.ip.lan }} .*"
