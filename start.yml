@@ -1,0 +1,13 @@
+---
+# Run ansible-playbook start.yml --extra-vars='{"vm": "vm", "snapshot": "snapshot"}'
+# vm        : is the name of your vm in inventory
+# snapshot  : is the name of the snapshot to use
+
+- name: Start a virtualbox vm
+  hosts: localhost
+  tasks:
+  - include_vars:
+      file: "{{ inventory_dir }}/host_vars/{{ vm }}"
+      name: testible
+
+  -
