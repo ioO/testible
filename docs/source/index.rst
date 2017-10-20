@@ -1,77 +1,80 @@
+========
 Testible
 ========
 
 Playbooks to start and stop virtualbox vms to test your playbook.
 
 When you write playbook you would like to test on virtual machine. More you learn ansible, more playbooks you write. You 
-use snapshots to keep your vm at the right state before your playbook. It is time consuming to start, stop and restore 
-your vms.
-Here comes **testible**, an easy and *ansible* way to start vm at state, test your playbook, stop and restore state.
+use snapshots to keep your vm at the right state before your playbook. It becomes time consuming to start, stop and 
+restore your vms.
+Here comes **testible**, an easy and *ansible* way to start vm at state, test your playbooks, stop and restore state.
 
 Quick start
------------
+===========
 
-1.  Copy testible-playbook.yml file in your ansible projet in the same
-    folder than your playbooks.
-2.  Set variables host vars for localhost and virtualbox vm host
-3.  Run this command
-```shell
-ansible-playbook testible-playbook.yml  --extra-vars='{"vm": "name of vm", "snapshot": "name of snapshot", "playbook": "name of playbook"}'
-```
-Test playbook use **localhost** host. It sets the vm at the snapshot and
-launch the vm. It includes your playbook defined in *playbook* extra
-vars.
+Download playbooks
+------------------
 
-You need to define vm and snapshot uuid, it is explained below.
+::
 
-Configure localhost
--------------------
+   wget https://raw.githubusercontent.com/ioO/testible/master/start.yml
+   wget https://raw.githubusercontent.com/ioO/testible/master/stop.yml
 
-First you need virtualbox and install at least one vm.
 
-Based on [ansible best
-practices](http://docs.ansible.com/ansible/playbooks_best_practices.html),
-this example use the directory layout. So variables needed for localhost
-are located on *host\_vars/localhost*. The file is commented. The
-testible playbook can sit along your project playbook.
+Add *ansible.cfg* and set *inventory*
+-------------------------------------
 
-The script need your local user in var to configure *$HOME/.ssh/config*
-file. The playbook add an entry for the test vm at the start and delete
-the entry when it quits.
-```yaml
-host:
-  user:
-    local: name of your local user
-```
+In the directory where you have downloaded playbooks add *ansible.cfg* file and set the inventory path.::
 
-Configure vm
-------------
+   # ansible.cfg
+   inventory = ./hosts
 
-For each vm choose a name. Add it to your inventory file and define
-variables in *host\_vars/name\_of\_hosts*.
+.. note::
 
-To get your vm uuid, run :
-```shell
-$ VBoxManage list vms
-```
+   Even if your inventory and host vars are in the same folder, define the inventory to *./hosts*.  The playbooks that 
+   start and stop vm includes vars of vm based of *inventory_dir* var.
 
-In your host var file add this var
-```yaml
-host:
-  vbox:
-    uuid: vmuuid
-```
-To get your vm snapshots, run :
-```shell
-$ VBoxManage snapshot vmuuid list
-```
-In your host var file add this var.
-```yaml
-host:
-  name: your host name
-  vbox:
-    uuid: vbox_uuid
-    snapshots:
-      bare_minimal: snapshotuuid
-```
-Take a look at host\_vars files ;)
+Get uuid of virtualbox vm and snapshots
+---------------------------------------
+
+To get your vm uuid, run::
+
+   $ VBoxManage list vms
+
+To get your vm snapshots, run::
+
+   $ VBoxManage snapshot uuid list
+
+Set inventory and host_vars
+---------------------------
+
+In *hosts* file add localhost and vm::
+
+
+   localhost ansible_connection=local
+   vm_name
+
+For each vm you need to add a var file
+In *hosts_vars/vm_name* add::
+
+   ---
+   host:
+   ip:
+     lan: 192.168.56.10
+   vbox:
+     uuid: vm_uuid
+     snapshots:
+       snap_name: snapshot_uuid
+
+Start and stop vm
+-----------------
+
+To start your vm and restore a snapshot::
+
+
+   ansible-playbook start.yml  --extra-vars='{"vm": "vm_name", "snapshot": "snap_name"}'
+
+To stop your vm::
+
+   ansible-playbook stop.yml  --extra-vars='{"vm": "vm_name"}'
+
