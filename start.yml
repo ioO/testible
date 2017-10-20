@@ -1,16 +1,15 @@
 ---
-# Run ansible-playbook testible-playbook.yml --extra-vars='{"vm": "vm", "snapshot": "snapshot", "playbook": "playbook name"}'
+# Run ansible-playbook start.yml --extra-vars='{"vm": "vm", "snapshot": "snapshot"}'
 # vm        : is the name of your vm in inventory
 # snapshot  : is the name of the snapshot to use
-# playbook  : is the name of the playbook to include for test
 
-- name: A Playbook to test yours
+- name: Start a virtualbox vm
   hosts: localhost
   tasks:
   - include_vars:
-      # include vars of your vm
-      file: "host_vars/{{ vm }}"
+      file: "{{ inventory_dir }}/host_vars/{{ vm }}"
       name: testible
+
   - name: Create entry in local .ssh/config
     blockinfile:
       dest: "/home/{{ host.user.local }}/.ssh/config"
@@ -44,26 +43,3 @@
       state: present
       delay: 5
 
-# include the playbook to test
-- name: Include the playbook to test
-  include: "{{ playbook }}"
-
-- name: Tasks to shutdown the vm and clean localhost
-  hosts: localhost
-  tasks:
-
-  # Shutdown the vm for tests use acpipowerbutton because poweroff loose files
-  - name: Shutdown the vm
-    command: "VBoxManage controlvm {{ testible.host.vbox.uuid }} acpipowerbutton"
-
-  - name: Remove entry in local .ssh/config
-    blockinfile:
-      dest: "/home/{{ host.user.local }}/.ssh/config"
-      marker: "# {mark} ANSIBLE MANAGED BLOCK FOR {{ testible.host.alias.lan }}"
-      state: absent
-
-  - name: Remove host ip in .ssh/known_hosts
-    lineinfile:
-      dest: "/home/{{ host.user.local }}/.ssh/known_hosts"
-      state: absent
-      regexp: "^{{ testible.host.ip.lan }} .*"
