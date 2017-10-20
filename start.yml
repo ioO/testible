@@ -10,4 +10,36 @@
       file: "{{ inventory_dir }}/host_vars/{{ vm }}"
       name: testible
 
-  -
+  - name: Create entry in local .ssh/config
+    blockinfile:
+      dest: "/home/{{ host.user.local }}/.ssh/config"
+      # Add unique marker for each host because ansible will rewrite block with same marker
+      marker: "# {mark} ANSIBLE MANAGED BLOCK FOR {{ testible.host.alias.lan }}"
+      block: |
+        Host {{ testible.host.alias.lan }}
+          HostName {{ testible.host.ip.lan }}
+          User {{ testible.host.ssh.user }}
+          ChallengeResponseAuthentication no
+          PasswordAuthentication yes
+          Port 22
+          ServerAliveCountMax 3
+          ServerAliveInterval 30
+          TCPKeepAlive no
+          StrictHostKeyChecking no
+
+  # Restore know vm state
+  - name: Set vm to snapshot state
+    command: "VBoxManage snapshot {{ testible.host.vbox.uuid }} restore {{ testible.host.vbox.snapshots[snapshot] }}"
+
+  # Start the vm
+  - name: Start the vm
+    command: "VBoxManage startvm {{ testible.host.vbox.uuid }}"
+
+  # Wait for ssh service is started so we can test the playbook
+  - name: Wait for ssh in vm
+    wait_for:
+      host: "{{ testible.host.ip.lan }}"
+      port: 22
+      state: present
+      delay: 5
+
