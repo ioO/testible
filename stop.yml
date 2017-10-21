@@ -14,14 +14,3 @@
   - name: Shutdown the vm
     command: "VBoxManage controlvm {{ testible.host.vbox.uuid }} acpipowerbutton"
 
-  - name: Remove entry in local .ssh/config
-    blockinfile:
-      dest: "/home/{{ host.user.local }}/.ssh/config"
-      marker: "# {mark} ANSIBLE MANAGED BLOCK FOR {{ testible.host.alias.lan }}"
-      state: absent
-
-  - name: Remove host ip in .ssh/known_hosts
-    lineinfile:
-      dest: "/home/{{ host.user.local }}/.ssh/known_hosts"
-      state: absent
-      regexp: "^{{ testible.host.ip.lan }} .*"
