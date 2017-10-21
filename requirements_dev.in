@@ -2,3 +2,4 @@ pip-review
 pip-tools
 sphinx
 sphinx-autobuild
+sphinx_rtd_theme
