@@ -30,6 +30,7 @@ requests==2.18.4          # via sphinx
 six==1.11.0               # via livereload, packaging, pip-tools, sphinx
 snowballstemmer==1.2.1    # via sphinx
 sphinx-autobuild==0.7.1
+sphinx-rtd-theme==0.2.4
 sphinx==1.6.4
 sphinxcontrib-websupport==1.0.1  # via sphinx
 tornado==4.5.2            # via livereload, sphinx-autobuild
