@@ -4,9 +4,10 @@ Testible
 
 Playbooks to start and stop virtualbox vms to test your playbook.
 
-When you write playbook you would like to test on virtual machine. More you learn ansible, more playbooks you write. You 
-use snapshots to keep your vm at the right state before your playbook. It becomes time consuming to start, stop and 
+When you write playbooks you would like to test on virtual machine before. More you learn ansible, more playbooks you 
+write. You use snapshots to keep your vm at the right state. It becomes time consuming to start, stop and 
 restore your vms.
+
 Here comes **testible**, an easy and *ansible* way to start vm at state, test your playbooks, stop and restore state.
 
 Quick start
@@ -24,15 +25,15 @@ Download playbooks
 Add *ansible.cfg* and set *inventory*
 -------------------------------------
 
-In the directory where you have downloaded playbooks add *ansible.cfg* file and set the inventory path.::
+In the directory where you have downloaded playbooks add *ansible.cfg* file and set the inventory path::
 
    # ansible.cfg
    inventory = ./hosts
 
 .. note::
 
-   Even if your inventory and host vars are in the same folder, define the inventory to *./hosts*.  The playbooks that 
-   start and stop vm includes vars of vm based of *inventory_dir* var.
+   Even if your inventory and host vars are in the same folder that the 2 playbooks, define the inventory to *./hosts*.
+   Both playbooks that start and stop vm are including vars of vm based on *inventory_dir* var.
 
 Get uuid of virtualbox vm and snapshots
 ---------------------------------------
@@ -54,8 +55,7 @@ In *hosts* file add localhost and vm::
    localhost ansible_connection=local
    vm_name
 
-For each vm you need to add a var file
-In *hosts_vars/vm_name* add::
+For each vm you need to add a var file. In *hosts_vars/vm_name* add::
 
    ---
    host:
