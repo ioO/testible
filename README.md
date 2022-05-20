@@ -1,3 +1,6 @@
+‼️ **Warning** : This repository is archived and not maintained. I don't think this trick is working with new version of ansible, perhaps it could give some inspiration 😉
+
+
 Testible
 ========
 
